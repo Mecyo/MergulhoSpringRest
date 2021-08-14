@@ -12,6 +12,7 @@ import com.mecyo.spring.domain.enums.StatusEntrega;
 import com.mecyo.spring.domain.model.Cliente;
 import com.mecyo.spring.domain.model.Entrega;
 import com.mecyo.spring.domain.repository.EntregaRepository;
+import com.mecyo.spring.mapper.EntregaMapper;
 
 import lombok.AllArgsConstructor;
 
@@ -21,51 +22,48 @@ public class EntregaService {
 
 	private EntregaRepository repository;
 	private ClienteService clienteService;
-	
-	
-	public List<Entrega> listar() {
-		return repository.findAll();
+	private EntregaMapper entregaMapper;
+
+	public List<EntregaDTO> listar() {
+		return entregaMapper.toCollectionDTO(repository.findAll());
 	}
-	
+
 	public ResponseEntity<EntregaDTO> getById(Long id) {
-		return repository.findById(id).map(entrega -> {
-			EntregaDTO dto = new EntregaDTO(entrega);
-			return ResponseEntity.ok(dto);
-		}).orElse(ResponseEntity.notFound().build());
+		return repository.findById(id).map(entrega -> ResponseEntity.ok(entregaMapper.toDTO(entrega)))
+				.orElse(ResponseEntity.notFound().build());
 	}
-	
+
 	@Transactional
-	public Entrega solicitar(Entrega entrega) {
+	public EntregaDTO solicitar(Entrega entrega) {
 		Long idCliente = entrega.getCliente().getId();
 		Cliente cliente = clienteService.buscarPorId(idCliente);
-		
+
 		entrega.setCliente(cliente);
 		entrega.setStatus(StatusEntrega.PENDENTE);
 		entrega.setDataPedido(OffsetDateTime.now());
-		
-		return repository.save(entrega);
+
+		return entregaMapper.toDTO(repository.save(entrega));
 	}
-	
+
 	@Transactional
-	public ResponseEntity<Entrega> update(Long id, Entrega entrega) {
-		if(!repository.existsById(id)) {
+	public ResponseEntity<EntregaDTO> update(Long id, Entrega entrega) {
+		if (!repository.existsById(id)) {
 			return ResponseEntity.notFound().build();
 		}
-		
+
 		entrega.setId(id);
-		entrega = solicitar(entrega);
-		
-		return ResponseEntity.ok(entrega);
+
+		return ResponseEntity.ok(solicitar(entrega));
 	}
 
 	@Transactional
 	public ResponseEntity<Void> delete(Long id) {
-		if(!repository.existsById(id)) {
+		if (!repository.existsById(id)) {
 			return ResponseEntity.notFound().build();
 		}
-		
+
 		repository.deleteById(id);
-		
+
 		return ResponseEntity.noContent().build();
 	}
 }

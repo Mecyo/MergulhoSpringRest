@@ -11,5 +11,4 @@ import com.mecyo.spring.domain.model.Entrega;
 public interface EntregaRepository extends JpaRepository<Entrega, Long> {
 
 	public Optional<Entrega> findById(Long id);
-
 }

@@ -30,7 +30,7 @@ public class EntregaController {
 	private EntregaService service;
 
 	@GetMapping
-	public List<Entrega> listar() {
+	public List<EntregaDTO> listar() {
 		return service.listar();
 	}
 	
@@ -41,12 +41,12 @@ public class EntregaController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Entrega solicitar(@Valid @RequestBody Entrega entrega) {
+	public EntregaDTO solicitar(@Valid @RequestBody Entrega entrega) {
 		return service.solicitar(entrega);
 	}
 	
 	@PutMapping("/{entregaId}")
-	public ResponseEntity<Entrega> update(@PathVariable Long entregaId, @Valid @RequestBody Entrega entrega) {
+	public ResponseEntity<EntregaDTO> update(@PathVariable Long entregaId, @Valid @RequestBody Entrega entrega) {
 		return service.update(entregaId, entrega);
 	}
 	
