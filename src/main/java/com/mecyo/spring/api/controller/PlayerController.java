@@ -18,47 +18,47 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mecyo.spring.domain.model.Cliente;
-import com.mecyo.spring.domain.service.ClienteService;
+import com.mecyo.spring.domain.model.Player;
+import com.mecyo.spring.domain.service.PlayerService;
 
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @RestController
 @CrossOrigin(origins = "http://localhost:8081")
-@RequestMapping("/clientes")
-public class ClienteController {
+@RequestMapping("/players")
+public class PlayerController {
 	
-	private ClienteService service;
+	private PlayerService service;
 
 	@GetMapping
-	public List<Cliente> listar() {
+	public List<Player> listar() {
 		return service.listar();
 	}
 	
-	@GetMapping("/{clienteId}")
-	public ResponseEntity<Cliente> getById(@PathVariable Long clienteId) {
-		return service.getById(clienteId);
+	@GetMapping("/{playerId}")
+	public ResponseEntity<Player> getById(@PathVariable Long playerId) {
+		return service.getById(playerId);
 	}
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cliente create(@Valid @RequestBody Cliente cliente) {
-		return service.create(cliente);
+	public Player create(@Valid @RequestBody Player player) {
+		return service.create(player);
 	}
 	
-	@PutMapping("/{clienteId}")
-	public ResponseEntity<Cliente> update(@PathVariable Long clienteId, @Valid @RequestBody Cliente cliente) {
-		return service.update(clienteId, cliente);
+	@PutMapping("/{playerId}")
+	public ResponseEntity<Player> update(@PathVariable Long playerId, @Valid @RequestBody Player player) {
+		return service.update(playerId, player);
 	}
 	
 	@GetMapping("/filterName")
-	public List<Cliente> findByNomeContaining(@RequestParam String partName) {
+	public List<Player> findByNomeContaining(@RequestParam String partName) {
 		return service.findByNomeContaining(partName);
 	}
 	
-	@DeleteMapping("/{clienteId}")
-	public ResponseEntity<Void> delete(@PathVariable Long clienteId) {
-		return service.delete(clienteId);
+	@DeleteMapping("/{playerId}")
+	public ResponseEntity<Void> delete(@PathVariable Long playerId) {
+		return service.delete(playerId);
 	}
 }
