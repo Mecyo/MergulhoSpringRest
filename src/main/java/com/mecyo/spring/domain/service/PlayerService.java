@@ -1,5 +1,6 @@
 package com.mecyo.spring.domain.service;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -35,14 +36,19 @@ public class PlayerService {
 	@Transactional
 	public Player create(Player player) {
 		String email = player.getEmail();
+		String nickname = player.getNickname();
+		String telefone = player.getTelefone();
 		
-		boolean emailEmUso = repository.findByEmail(email)
+		boolean emailEmUso = repository.findByEmailOrNicknameOrTelefone(email, nickname, telefone)
 				.stream()
 				.anyMatch(c -> !c.equals(player));
 		
 		if(emailEmUso) {
-			throw new NegocioException("Já existe um player cadastrado com o e-mail '" + email + "'");
+			throw new NegocioException("Já existe um player registrado com o e-mail '" + email + "', com o nickname '"
+					+ nickname + "' ou telefone '" + telefone + "'");
 		}
+		
+		player.setDataRegistro(OffsetDateTime.now());
 		
 		return repository.save(player);
 	}
