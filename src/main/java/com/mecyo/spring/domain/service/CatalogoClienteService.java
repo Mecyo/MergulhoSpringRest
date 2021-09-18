@@ -1,8 +1,8 @@
 package com.mecyo.spring.domain.service;
 
 import java.util.List;
+import java.util.Optional;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +14,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @Service
-public class ClienteService {
+public class CatalogoClienteService {
 
 	private ClienteRepository repository;
 	
@@ -28,8 +28,8 @@ public class ClienteService {
 				.orElseThrow(() -> new NegocioException("Cliente com id: '" + idCliente + "' não localizado!"));
 	}
 	
-	public ResponseEntity<Cliente> getById(Long id) {
-		return repository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+	public Optional<Cliente> getById(Long id) {
+		return repository.findById(id);
 	}
 	
 	@Transactional
@@ -52,25 +52,19 @@ public class ClienteService {
 	}
 
 	@Transactional
-	public ResponseEntity<Cliente> update(Long id, Cliente cliente) {
-		if(!repository.existsById(id)) {
-			return ResponseEntity.notFound().build();
-		}
-		
+	public Cliente update(Long id, Cliente cliente) {
 		cliente.setId(id);
 		cliente = create(cliente);
 		
-		return ResponseEntity.ok(cliente);
+		return cliente;
 	}
 
 	@Transactional
-	public ResponseEntity<Void> delete(Long clienteId) {
-		if(!repository.existsById(clienteId)) {
-			return ResponseEntity.notFound().build();
-		}
-		
+	public void delete(Long clienteId) {
 		repository.deleteById(clienteId);
-		
-		return ResponseEntity.noContent().build();
+	}
+	
+	public boolean existsById(Long clienteId) {
+		return repository.existsById(clienteId);
 	}
 }

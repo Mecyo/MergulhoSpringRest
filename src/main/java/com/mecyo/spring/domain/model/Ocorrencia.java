@@ -1,6 +1,6 @@
 package com.mecyo.spring.domain.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,7 +23,7 @@ public class Ocorrencia {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String descricao;
-	private LocalDateTime dataRegistro;
+	private OffsetDateTime dataRegistro;
 	
 	@ManyToOne
 	private Entrega entrega;

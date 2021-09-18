@@ -18,8 +18,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mecyo.spring.api.dto.ClienteDTO;
+import com.mecyo.spring.api.input.ClienteInput;
 import com.mecyo.spring.domain.model.Cliente;
-import com.mecyo.spring.domain.service.ClienteService;
+import com.mecyo.spring.domain.service.CatalogoClienteService;
+import com.mecyo.spring.mapper.ClienteMapper;
 
 import lombok.AllArgsConstructor;
 
@@ -29,36 +32,51 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/clientes")
 public class ClienteController {
 	
-	private ClienteService service;
+	private CatalogoClienteService service;
+	private ClienteMapper clienteMapper;
 
 	@GetMapping
-	public List<Cliente> listar() {
-		return service.listar();
+	public List<ClienteDTO> listar() {
+		return clienteMapper.toCollectionDTO(service.listar());
 	}
 	
 	@GetMapping("/{clienteId}")
-	public ResponseEntity<Cliente> getById(@PathVariable Long clienteId) {
-		return service.getById(clienteId);
+	public ResponseEntity<ClienteDTO> getById(@PathVariable Long clienteId) {
+		return service.getById(clienteId).map(cliente -> ResponseEntity.ok(clienteMapper.toDTO(cliente)))
+				.orElse(ResponseEntity.notFound().build());
 	}
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cliente create(@Valid @RequestBody Cliente cliente) {
-		return service.create(cliente);
+	public ClienteDTO create(@Valid @RequestBody ClienteInput clienteInput) {
+		Cliente cliente = clienteMapper.toEntity(clienteInput);
+		return clienteMapper.toDTO(service.create(cliente));
 	}
 	
 	@PutMapping("/{clienteId}")
-	public ResponseEntity<Cliente> update(@PathVariable Long clienteId, @Valid @RequestBody Cliente cliente) {
-		return service.update(clienteId, cliente);
+	public ResponseEntity<ClienteDTO> update(@PathVariable Long clienteId, @Valid @RequestBody ClienteInput clienteInput) {
+		Cliente cliente = clienteMapper.toEntity(clienteInput);
+		
+		if (!service.existsById(clienteId)) {
+			return ResponseEntity.notFound().build();
+		}
+
+		return ResponseEntity.ok(clienteMapper.toDTO(service.update(clienteId, cliente)));
 	}
 	
 	@GetMapping("/filterName")
-	public List<Cliente> findByNomeContaining(@RequestParam String partName) {
-		return service.findByNomeContaining(partName);
+	public List<ClienteDTO> findByNomeContaining(@RequestParam String partName) {
+		return clienteMapper.toCollectionDTO(service.findByNomeContaining(partName));
 	}
 	
 	@DeleteMapping("/{clienteId}")
 	public ResponseEntity<Void> delete(@PathVariable Long clienteId) {
-		return service.delete(clienteId);
+		if (!service.existsById(clienteId)) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		service.delete(clienteId);
+		
+		return ResponseEntity.noContent().build();
 	}
 }

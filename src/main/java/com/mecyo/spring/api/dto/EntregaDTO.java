@@ -2,6 +2,7 @@ package com.mecyo.spring.api.dto;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 import com.mecyo.spring.domain.enums.StatusEntrega;
 
@@ -17,5 +18,5 @@ public class EntregaDTO {
 	private DestinatarioDTO destinatario;
 	private StatusEntrega status;
 	
-	//private List<Ocorrencia> ocorrencias;
+	private List<OcorrenciaDTO> ocorrencias;
 }
