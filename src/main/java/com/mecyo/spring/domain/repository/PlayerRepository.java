@@ -1,5 +1,6 @@
 package com.mecyo.spring.domain.repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,16 +11,10 @@ import com.mecyo.spring.domain.model.Player;
 
 @Repository
 public interface PlayerRepository extends JpaRepository<Player, Long> {
-
-	public List<Player> findByNome(String nome);
-	
-	public Optional<Player> findByEmail(String email);
-	
-	public Optional<Player> findByEmailOrNicknameOrTelefone(String email, String nickname, String telefone);
-	
-	public List<Player> findByTelefone(String telefone);
 	
 	public Optional<Player> findById(Long id);
 	
-	public List<Player> findByNomeContaining(String nome);
+	public List<Player> findByNicknameContaining(String nome);
+
+	public Collection<Player> findByNickname(String nickname);
 }

@@ -1,13 +1,13 @@
 package com.mecyo.spring.api.dto;
 
+import java.time.OffsetDateTime;
+
 import lombok.Data;
 
 @Data
-public class ClienteDTO {
+public class ClanDTO {
 
 	private Long id;
 	private String nome;
-	private String email;
-	private String telefone;
-	private String token;
+	private OffsetDateTime dataRegistro;
 }

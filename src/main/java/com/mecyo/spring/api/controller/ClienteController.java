@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mecyo.spring.api.dto.ClienteDTO;
 import com.mecyo.spring.api.input.ClienteInput;
+import com.mecyo.spring.api.input.UserInput;
 import com.mecyo.spring.domain.model.Cliente;
 import com.mecyo.spring.domain.service.CatalogoClienteService;
 import com.mecyo.spring.mapper.ClienteMapper;
@@ -28,7 +29,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @RestController
-@CrossOrigin(origins = {"http://localhost:8081", "https://curso-msr.000webhostapp.com", "https://torneio-de-clash.000webhostapp.com"})
+@CrossOrigin(origins = {"http://localhost:8080", "https://curso-msr.000webhostapp.com", "https://torneio-de-clash.000webhostapp.com"})
 @RequestMapping("/clientes")
 public class ClienteController {
 	
@@ -78,5 +79,16 @@ public class ClienteController {
 		service.delete(clienteId);
 		
 		return ResponseEntity.noContent().build();
+	}
+	
+	@GetMapping("/login")
+	public ResponseEntity<ClienteDTO> login(@RequestParam String email, @RequestParam String senha) {
+		UserInput user = new UserInput(email, senha);
+		return service.verificarLogin(user);
+	}
+	
+	@PostMapping("/send-mail-pass")
+	public ResponseEntity<Void> enviarEmailsDeSenha(@RequestBody List<Long> ids) {
+		return service.enviarEmailsDeSenha(ids);
 	}
 }

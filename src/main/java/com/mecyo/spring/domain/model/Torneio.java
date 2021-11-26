@@ -9,12 +9,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.groups.ConvertGroup;
-import javax.validation.groups.Default;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
@@ -28,35 +25,21 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-public class Player {
+public class Torneio {
 
 	@Id
-	@NotNull(groups = ValidationGroups.PlayerId.class)
+	@NotNull(groups = ValidationGroups.TorneioId.class)
 	@EqualsAndHashCode.Include
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotNull
-	private String nickname;
-	
-	@Valid
-	@NotNull
-	@OneToOne
-	private Clan clan;
-	
-	@NotNull
-	private Integer nivel;
+	@NotBlank
+	@Size(max = 60)
+	private String nome;
 	
 	@JsonProperty(access = Access.READ_ONLY)
 	private OffsetDateTime dataRegistro;
 	
-	@Valid
-	@NotNull
-	@ConvertGroup(from = Default.class, to = ValidationGroups.ClienteId.class)
-	@ManyToOne
-	private Cliente cliente;
-	
 	@ManyToMany
-	private List<Torneio> torneios = new ArrayList<>();
-	
+	private List<Player> players = new ArrayList<>();
 }

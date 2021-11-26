@@ -1,16 +1,12 @@
 package com.mecyo.spring.domain.model;
 
-import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -33,15 +29,10 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-public class Cliente  implements Serializable{
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3217803188888119987L;
+public class Grupo {
 
 	@Id
-	@NotNull(groups = ValidationGroups.ClienteId.class)
+	@NotNull(groups = ValidationGroups.GrupoId.class)
 	@EqualsAndHashCode.Include
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -49,25 +40,15 @@ public class Cliente  implements Serializable{
 	@NotBlank
 	@Size(max = 60)
 	private String nome;
+	
+	@NotBlank
+	@Size(max = 60)
+	private String descricao;
 
-	@NotBlank
-	@Email
-	@Size(max = 255)
-	private String email;
-
-	@NotBlank
-	@Size(min = 10, max = 20)
-	private String telefone;
-	
-	@NotBlank
-	private String senha;
-	
-	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
-	private List<Player> players;
-	
-	@ManyToMany
-    private List<Grupo> grupos;
+    @ManyToMany(mappedBy = "grupos")
+    private List<Cliente> usuarios;
 
     @ManyToMany
     private List<Permissao> permissoes;
+	
 }

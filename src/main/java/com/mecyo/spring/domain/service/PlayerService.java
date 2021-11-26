@@ -2,6 +2,7 @@ package com.mecyo.spring.domain.service;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,6 @@ public class PlayerService {
 
 	private PlayerRepository repository;
 	
-	
 	public List<Player> listar() {
 		return repository.findAll();
 	}
@@ -29,23 +29,20 @@ public class PlayerService {
 				.orElseThrow(() -> new NegocioException("Player com id: '" + idPlayer + "' não localizado!"));
 	}
 	
-	public ResponseEntity<Player> getById(Long id) {
-		return repository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+	public Optional<Player> getById(Long id) {
+		return repository.findById(id);
 	}
 	
 	@Transactional
 	public Player create(Player player) {
-		String email = player.getEmail();
 		String nickname = player.getNickname();
-		String telefone = player.getTelefone();
 		
-		boolean emailEmUso = repository.findByEmailOrNicknameOrTelefone(email, nickname, telefone)
+		boolean nicknameEmUso = repository.findByNickname(nickname)
 				.stream()
 				.anyMatch(c -> !c.equals(player));
 		
-		if(emailEmUso) {
-			throw new NegocioException("Já existe um player registrado com o e-mail '" + email + "', com o nickname '"
-					+ nickname + "' ou telefone '" + telefone + "'");
+		if(nicknameEmUso) {
+			throw new NegocioException("Já existe um player registrado com o nickname '" + nicknameEmUso + "'");
 		}
 		
 		player.setDataRegistro(OffsetDateTime.now());
@@ -53,20 +50,20 @@ public class PlayerService {
 		return repository.save(player);
 	}
 	
-	public List<Player> findByNomeContaining(String partName) {
-		return repository.findByNomeContaining(partName);
+	public List<Player> findByNicknameContaining(String partName) {
+		return repository.findByNicknameContaining(partName);
 	}
 
 	@Transactional
-	public ResponseEntity<Player> update(Long id, Player player) {
-		if(!repository.existsById(id)) {
-			return ResponseEntity.notFound().build();
-		}
-		
+	public Player update(Long id, Player player) {
 		player.setId(id);
 		player = create(player);
 		
-		return ResponseEntity.ok(player);
+		return player;
+	}
+	
+	public boolean existsById(Long playerId) {
+		return repository.existsById(playerId);
 	}
 
 	@Transactional

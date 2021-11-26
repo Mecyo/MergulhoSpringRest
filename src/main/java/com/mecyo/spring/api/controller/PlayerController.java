@@ -18,43 +18,53 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mecyo.spring.api.dto.PlayerDTO;
+import com.mecyo.spring.api.input.PlayerInput;
 import com.mecyo.spring.domain.model.Player;
 import com.mecyo.spring.domain.service.PlayerService;
+import com.mecyo.spring.mapper.PlayerMapper;
 
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @RestController
-@CrossOrigin(origins = {"http://localhost:8081", "https://curso-msr.000webhostapp.com", "https://torneio-de-clash.000webhostapp.com"})
+@CrossOrigin(origins = {"http://localhost:8080", "https://curso-msr.000webhostapp.com", "https://torneio-de-clash.000webhostapp.com"})
 @RequestMapping("/players")
 public class PlayerController {
 	
 	private PlayerService service;
+	private PlayerMapper playerMapper;
 
 	@GetMapping
-	public List<Player> listar() {
-		return service.listar();
+	public List<PlayerDTO> listar() {
+		return playerMapper.toCollectionDTO(service.listar());
 	}
 	
 	@GetMapping("/{playerId}")
-	public ResponseEntity<Player> getById(@PathVariable Long playerId) {
-		return service.getById(playerId);
+	public ResponseEntity<PlayerDTO> getById(@PathVariable Long playerId) {
+		return service.getById(playerId).map(player -> ResponseEntity.ok(playerMapper.toDTO(player)))
+				.orElse(ResponseEntity.notFound().build());
 	}
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Player create(@Valid @RequestBody Player player) {
-		return service.create(player);
+	public PlayerDTO create(@Valid @RequestBody PlayerInput playerInput) {
+		Player player = playerMapper.toEntity(playerInput);
+		return playerMapper.toDTO(service.create(player));
 	}
 	
 	@PutMapping("/{playerId}")
-	public ResponseEntity<Player> update(@PathVariable Long playerId, @Valid @RequestBody Player player) {
-		return service.update(playerId, player);
+	public ResponseEntity<PlayerDTO> update(@PathVariable Long playerId, @Valid @RequestBody Player player) {
+		if(!service.existsById(playerId)) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		return ResponseEntity.ok(playerMapper.toDTO(service.update(playerId, player)));
 	}
 	
-	@GetMapping("/filterName")
-	public List<Player> findByNomeContaining(@RequestParam String partName) {
-		return service.findByNomeContaining(partName);
+	@GetMapping("/filterNickname")
+	public List<Player> findByNicknameContaining(@RequestParam String partName) {
+		return service.findByNicknameContaining(partName);
 	}
 	
 	@DeleteMapping("/{playerId}")
