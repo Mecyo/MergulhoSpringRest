@@ -50,6 +50,11 @@ public class Player {
 	@JsonProperty(access = Access.READ_ONLY)
 	private OffsetDateTime dataRegistro;
 	
+	private Integer idUser;
+	
+	@JsonProperty(access = Access.READ_ONLY)
+	private OffsetDateTime dataBanimento;
+	
 	@Valid
 	@NotNull
 	@ConvertGroup(from = Default.class, to = ValidationGroups.ClienteId.class)
