@@ -124,8 +124,8 @@ public class CatalogoClienteService {
 						+ "</head>"
 						+ "<body>"
 						+ "<p>Olá, <font color=\"red\">{0}!</font></p>"
-						+ "<br/><p>Estamos melhorando o sistema de cadastro para torneios e geramos a sua senha de acesso: <strong><font color=\"green\">{1}</font></strong></p>"
-						+ "<p>Utilize o seu e-mail de cadastro, juntamente com a senha informada acima, para efetuar login e se cadastrar para os próximos torneios.</p>"
+						+ "<br/><p>Estamos melhorando o sistema de cadastro no site do clã e geramos a sua senha de acesso: <strong><font color=\"green\">{1}</font></strong></p>"
+						+ "<p>Utilize o seu e-mail de cadastro, juntamente com a senha informada acima, para efetuar login e aproveitar o que os Insanos têm a oferecer.</p>"
 						+ "<a href=\"{2}\">Acesse aqui</a>"
 						+ "</body>"
 						+ "</html>", c.getNome(), c.getSenha(), this.urlApp);

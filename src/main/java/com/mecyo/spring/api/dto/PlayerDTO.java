@@ -13,4 +13,7 @@ public class PlayerDTO {
 	private OffsetDateTime dataRegistro;
 	private ClanDTO clan;
 	private ClienteDTO cliente;
+	private String motivoBanimento;
+	private String banidoPor;
+	private OffsetDateTime dataBanimento;
 }

@@ -18,10 +18,14 @@ public class PlayerInput {
 	private Integer nivel;
 
 	@Valid
-	@NotBlank
 	private ClanInput clan;
 
 	@Valid
-	@NotBlank
 	private ClienteInput cliente;
+	
+	@Valid
+	private String motivoBanimento;
+	
+	@Valid
+	private String banidoPor;
 }
