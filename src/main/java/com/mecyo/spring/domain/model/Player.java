@@ -18,16 +18,19 @@ import javax.validation.groups.Default;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.mecyo.spring.api.input.PlayerInput;
 import com.mecyo.spring.domain.validation.ValidationGroups;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
+@NoArgsConstructor
 public class Player {
 
 	@Id
@@ -40,11 +43,9 @@ public class Player {
 	private String nickname;
 	
 	@Valid
-	@NotNull
 	@OneToOne
 	private Clan clan;
 	
-	@NotNull
 	private Integer nivel;
 	
 	@JsonProperty(access = Access.READ_ONLY)
@@ -55,13 +56,27 @@ public class Player {
 	@JsonProperty(access = Access.READ_ONLY)
 	private OffsetDateTime dataBanimento;
 	
+	private String motivoBanimento;
+	
+	private String banidoPor;
+	
 	@Valid
-	@NotNull
 	@ConvertGroup(from = Default.class, to = ValidationGroups.ClienteId.class)
 	@ManyToOne
 	private Cliente cliente;
 	
 	@ManyToMany
 	private List<Torneio> torneios = new ArrayList<>();
-	
+
+	public Player(@Valid PlayerInput playerInput) {
+		this.motivoBanimento = playerInput.getMotivoBanimento();
+		this.banidoPor = playerInput.getBanidoPor();
+		this.dataBanimento = this.dataRegistro = OffsetDateTime.now();
+	}
+
+	public void ban(@Valid PlayerInput playerInput) {
+		this.motivoBanimento = playerInput.getMotivoBanimento();
+		this.banidoPor = playerInput.getBanidoPor();
+		this.dataBanimento = OffsetDateTime.now();
+	}
 }

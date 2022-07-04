@@ -4,6 +4,9 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.apache.logging.log4j.util.Strings;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -40,6 +43,15 @@ public class PlayerController {
 		return playerMapper.toCollectionDTO(service.listar());
 	}
 	
+	@GetMapping("/banned")
+	public Page<PlayerDTO> listarBanidos(@RequestParam String nickname, Pageable page) {
+		if(Strings.isEmpty(nickname)) {
+			return service.listarBanidos(page);
+		}
+		
+		return service.listarBanidosPorNickname(nickname, page);
+	}
+	
 	@GetMapping("/{playerId}")
 	public ResponseEntity<PlayerDTO> getById(@PathVariable Long playerId) {
 		return service.getById(playerId).map(player -> ResponseEntity.ok(playerMapper.toDTO(player)))
@@ -53,6 +65,11 @@ public class PlayerController {
 		return playerMapper.toDTO(service.create(player));
 	}
 	
+	@PostMapping("/ban")
+	public ResponseEntity<Void> ban(@Valid @RequestBody PlayerInput playerInput) {
+		return service.ban(playerInput);
+	}
+	
 	@PutMapping("/{playerId}")
 	public ResponseEntity<PlayerDTO> update(@PathVariable Long playerId, @Valid @RequestBody Player player) {
 		if(!service.existsById(playerId)) {
@@ -60,11 +77,6 @@ public class PlayerController {
 		}
 		
 		return ResponseEntity.ok(playerMapper.toDTO(service.update(playerId, player)));
-	}
-	
-	@GetMapping("/filterNickname")
-	public List<Player> findByNicknameContaining(@RequestParam String partName) {
-		return service.findByNicknameContaining(partName);
 	}
 	
 	@DeleteMapping("/{playerId}")

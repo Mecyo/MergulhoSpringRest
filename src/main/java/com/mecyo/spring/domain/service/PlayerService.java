@@ -4,13 +4,22 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mecyo.spring.api.dto.PlayerDTO;
+import com.mecyo.spring.api.input.PlayerInput;
 import com.mecyo.spring.domain.exception.NegocioException;
 import com.mecyo.spring.domain.model.Player;
 import com.mecyo.spring.domain.repository.PlayerRepository;
+import com.mecyo.spring.mapper.PlayerMapper;
 
 import lombok.AllArgsConstructor;
 
@@ -19,9 +28,21 @@ import lombok.AllArgsConstructor;
 public class PlayerService {
 
 	private PlayerRepository repository;
+
+	private PlayerMapper playerMapper;
 	
 	public List<Player> listar() {
 		return repository.findAll();
+	}
+	
+	public Page<PlayerDTO> listarBanidos(Pageable page) {
+		Page<Player> result = repository.findAllBanned(page);
+		return result.map(object -> playerMapper.toDTO(object));
+	}
+	
+	public Page<PlayerDTO> listarBanidosPorNickname(String nickname, Pageable page) {
+		Page<Player> result = repository.findBannedByNicknameContaining(nickname, page);
+		return result.map(object -> playerMapper.toDTO(object));
 	}
 	
 	public Player buscarPorId(Long idPlayer) {
@@ -50,10 +71,6 @@ public class PlayerService {
 		return repository.save(player);
 	}
 	
-	public List<Player> findByNicknameContaining(String partName) {
-		return repository.findByNicknameContaining(partName);
-	}
-
 	@Transactional
 	public Player update(Long id, Player player) {
 		player.setId(id);
@@ -73,6 +90,21 @@ public class PlayerService {
 		}
 		
 		repository.deleteById(playerId);
+		
+		return ResponseEntity.noContent().build();
+	}
+
+	public ResponseEntity<Void> ban(@Valid PlayerInput playerInput) {
+		Player player = repository.findByNickname(playerInput.getNickname()).isEmpty() ? null : repository.findByNickname(playerInput.getNickname()).get(0);
+		
+		playerInput.setBanidoPor(((UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername());
+		if(player != null) {
+			player.ban(playerInput);
+		} else {
+			player = new Player(playerInput);
+		}
+		
+		repository.save(player);
 		
 		return ResponseEntity.noContent().build();
 	}
