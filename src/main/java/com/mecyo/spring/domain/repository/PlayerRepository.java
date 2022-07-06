@@ -23,6 +23,6 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
 	@Query("SELECT p FROM Player p WHERE p.dataBanimento IS NOT NULL")
 	public Page<Player> findAllBanned(Pageable page);
 
-	@Query("SELECT p FROM Player p WHERE p.dataBanimento IS NOT NULL AND p.nickname LIKE '%:nickname%'")
+	@Query("SELECT p FROM Player p WHERE p.dataBanimento IS NOT NULL AND p.nickname LIKE %:nickname%")
 	public Page<Player> findBannedByNicknameContaining(String nickname, Pageable page);
 }

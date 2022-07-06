@@ -20,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.mecyo.spring.api.dto.PlayerDTO;
+import com.mecyo.spring.api.dto.RankingDTO;
 import com.mecyo.spring.api.input.PlayerInput;
 import com.mecyo.spring.domain.model.Player;
 import com.mecyo.spring.domain.service.PlayerService;
@@ -31,10 +33,11 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @RestController
-@CrossOrigin(origins = {"http://localhost:8080", "https://curso-msr.000webhostapp.com", "https://torneio-de-clash.000webhostapp.com"})
+@CrossOrigin(origins = { "http://localhost:8080", "https://curso-msr.000webhostapp.com",
+		"https://torneio-de-clash.000webhostapp.com" })
 @RequestMapping("/players")
 public class PlayerController {
-	
+
 	private PlayerService service;
 	private PlayerMapper playerMapper;
 
@@ -42,45 +45,52 @@ public class PlayerController {
 	public List<PlayerDTO> listar() {
 		return playerMapper.toCollectionDTO(service.listar());
 	}
-	
+
 	@GetMapping("/banned")
 	public Page<PlayerDTO> listarBanidos(@RequestParam String nickname, Pageable page) {
-		if(Strings.isEmpty(nickname)) {
+		if (Strings.isEmpty(nickname)) {
 			return service.listarBanidos(page);
 		}
-		
+
 		return service.listarBanidosPorNickname(nickname, page);
 	}
-	
+
 	@GetMapping("/{playerId}")
 	public ResponseEntity<PlayerDTO> getById(@PathVariable Long playerId) {
 		return service.getById(playerId).map(player -> ResponseEntity.ok(playerMapper.toDTO(player)))
 				.orElse(ResponseEntity.notFound().build());
 	}
-	
+
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public PlayerDTO create(@Valid @RequestBody PlayerInput playerInput) {
 		Player player = playerMapper.toEntity(playerInput);
 		return playerMapper.toDTO(service.create(player));
 	}
-	
+
 	@PostMapping("/ban")
 	public ResponseEntity<Void> ban(@Valid @RequestBody PlayerInput playerInput) {
 		return service.ban(playerInput);
 	}
-	
+
 	@PutMapping("/{playerId}")
 	public ResponseEntity<PlayerDTO> update(@PathVariable Long playerId, @Valid @RequestBody Player player) {
-		if(!service.existsById(playerId)) {
+		if (!service.existsById(playerId)) {
 			return ResponseEntity.notFound().build();
 		}
-		
+
 		return ResponseEntity.ok(playerMapper.toDTO(service.update(playerId, player)));
 	}
-	
+
 	@DeleteMapping("/{playerId}")
 	public ResponseEntity<Void> delete(@PathVariable Long playerId) {
 		return service.delete(playerId);
+	}
+
+	@PostMapping("/calcularRanking")
+	public ResponseEntity<List<RankingDTO>> calcularRanking(@RequestParam("file1") MultipartFile file1,
+			@RequestParam("file2") MultipartFile file2, @RequestParam("file3") MultipartFile file3,
+			@RequestParam("file4") MultipartFile file4) {
+		return service.calcularRanking(file1, file2, file3, file4);
 	}
 }

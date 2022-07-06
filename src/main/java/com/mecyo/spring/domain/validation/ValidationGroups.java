@@ -21,4 +21,8 @@ public interface ValidationGroups {
 	public interface TorneioId {
 
 	}
+	
+	public interface RankingId {
+
+	}
 }
