@@ -54,6 +54,12 @@ public class ClienteController {
 		return clienteMapper.toDTO(service.create(cliente));
 	}
 	
+	@PostMapping("/cadastro")
+	@ResponseStatus(HttpStatus.CREATED)
+	public ClienteDTO cadastrar(@Valid @RequestBody ClienteInput clienteInput) {
+		return this.create(clienteInput);
+	}
+	
 	@PutMapping("/{clienteId}")
 	public ResponseEntity<ClienteDTO> update(@PathVariable Long clienteId, @Valid @RequestBody ClienteInput clienteInput) {
 		Cliente cliente = clienteMapper.toEntity(clienteInput);

@@ -20,10 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.mecyo.spring.api.dto.PlayerDTO;
-import com.mecyo.spring.api.dto.RankingDTO;
 import com.mecyo.spring.api.input.PlayerInput;
 import com.mecyo.spring.domain.model.Player;
 import com.mecyo.spring.domain.service.PlayerService;
@@ -85,12 +83,5 @@ public class PlayerController {
 	@DeleteMapping("/{playerId}")
 	public ResponseEntity<Void> delete(@PathVariable Long playerId) {
 		return service.delete(playerId);
-	}
-
-	@PostMapping("/calcularRanking")
-	public ResponseEntity<List<RankingDTO>> calcularRanking(@RequestParam("file1") MultipartFile file1,
-			@RequestParam("file2") MultipartFile file2, @RequestParam("file3") MultipartFile file3,
-			@RequestParam("file4") MultipartFile file4) {
-		return service.calcularRanking(file1, file2, file3, file4);
 	}
 }

@@ -98,11 +98,6 @@
 			<version>0.9.1</version>
 		</dependency>
 		<dependency>
-		    <groupId>com.aspose</groupId>
-		    <artifactId>aspose-ocr</artifactId>
-		    <version>22.5</version>
-		</dependency>
-		<dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>rekognition</artifactId>
         </dependency>

@@ -1,6 +1,9 @@
 package com.mecyo.spring.utils;
 import java.io.File;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+
 public class Utils {
 
 	public static String getDataDir(Class<?> c) {
@@ -24,6 +27,21 @@ public class Utils {
 		dir = new File(dir, "resources");
 
 		return dir.toString() + File.separator;
+	}
+
+	public static String getUserName() {
+		return ((UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+	}
+	
+	public static boolean isInteger(String s) {
+	    try { 
+	        Integer.parseInt(s); 
+	    } catch(NumberFormatException e) { 
+	        return false; 
+	    } catch(NullPointerException e) {
+	        return false;
+	    }
+	    return true;
 	}
 
 }

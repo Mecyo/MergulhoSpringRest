@@ -1,6 +1,7 @@
 package com.mecyo.spring.domain.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -35,9 +36,6 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Cliente  implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3217803188888119987L;
 
 	@Id
@@ -66,7 +64,8 @@ public class Cliente  implements Serializable{
 	private List<Player> players;
 	
 	@ManyToMany
-    private List<Grupo> grupos;
+	@Builder.Default
+    private List<Grupo> grupos = new ArrayList<Grupo>();
 
     @ManyToMany
     private List<Permissao> permissoes;

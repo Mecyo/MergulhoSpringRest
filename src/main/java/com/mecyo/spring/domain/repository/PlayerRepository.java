@@ -1,6 +1,5 @@
 package com.mecyo.spring.domain.repository;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -18,7 +17,7 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
 	
 	public Page<Player> findByNicknameContaining(String nickname, Pageable page);
 
-	public List<Player> findByNickname(String nickname);
+	public Player findByNickname(String nickname);
 
 	@Query("SELECT p FROM Player p WHERE p.dataBanimento IS NOT NULL")
 	public Page<Player> findAllBanned(Pageable page);
