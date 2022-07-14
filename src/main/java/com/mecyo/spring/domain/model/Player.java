@@ -69,6 +69,7 @@ public class Player {
 	private List<Torneio> torneios = new ArrayList<>();
 
 	public Player(@Valid PlayerInput playerInput) {
+		this.nickname = playerInput.getNickname();
 		this.motivoBanimento = playerInput.getMotivoBanimento();
 		this.banidoPor = playerInput.getBanidoPor();
 		this.dataBanimento = this.dataRegistro = OffsetDateTime.now();

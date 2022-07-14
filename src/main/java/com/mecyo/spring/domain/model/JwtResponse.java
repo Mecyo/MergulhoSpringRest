@@ -13,12 +13,14 @@ public class JwtResponse implements Serializable {
 
 	private static final long serialVersionUID = -8091879091924046844L;
 
+	private Long id;
 	private String token;
 	private String nome;
 	private String email;
 	private List<String> permissoes = new ArrayList<>();
 
 	public JwtResponse(UsuarioSistema userDetails, String token) {
+		this.id = userDetails.getId();
 		this.nome = userDetails.getNome();
 		this.email = userDetails.getUsername();
 		this.token = token;

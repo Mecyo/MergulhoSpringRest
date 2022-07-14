@@ -57,10 +57,7 @@ public class PlayerService {
 	public Player create(Player player) {
 		String nickname = player.getNickname();
 		
-		boolean nicknameEmUso = repository.findByNickname(nickname)
-				.equals(player);
-		
-		if(nicknameEmUso) {
+		if(repository.findByNickname(nickname) != null) {
 			throw new NegocioException("Já existe um player registrado com o nickname '" + nickname + "'");
 		}
 		

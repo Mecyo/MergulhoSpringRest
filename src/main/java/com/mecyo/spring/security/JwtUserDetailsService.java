@@ -43,7 +43,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 
         Cliente user = usuario.get();
         
-        return new UsuarioSistema(user.getNome(), user.getEmail(), user.getSenha(), authorities(user));
+        return new UsuarioSistema(user.getId(), user.getNome(), user.getEmail(), user.getSenha(), authorities(user));
     }
 
     public Collection<? extends GrantedAuthority> authorities(Cliente usuario) {
