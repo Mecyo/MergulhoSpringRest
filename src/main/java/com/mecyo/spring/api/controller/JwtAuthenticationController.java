@@ -32,11 +32,27 @@ public class JwtAuthenticationController {
 	private JwtUserDetailsService userDetailsService;
 
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+	public ResponseEntity<JwtResponse> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest)
+			throws Exception {
 		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-		final UsuarioSistema userDetails = (UsuarioSistema)userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+		final UsuarioSistema userDetails = (UsuarioSistema) userDetailsService
+				.loadUserByUsername(authenticationRequest.getUsername());
 		final String token = jwtTokenUtil.generateToken(userDetails);
+
 		return ResponseEntity.ok(new JwtResponse(userDetails, token));
+	}
+
+	@RequestMapping(value = "/token-validate", method = RequestMethod.POST)
+	public ResponseEntity<JwtResponse> validarToken(@RequestBody String token) throws Exception {
+		JwtResponse response = null;
+		if (!jwtTokenUtil.isTokenExpired(token)) {
+			String username = jwtTokenUtil.getUsernameFromToken(token);
+			final UsuarioSistema userDetails = (UsuarioSistema) userDetailsService.loadUserByUsername(username);
+			final String newToken = jwtTokenUtil.generateToken(userDetails);
+			response = new JwtResponse(userDetails, newToken);
+		}
+
+		return ResponseEntity.ok(response);
 	}
 
 	private void authenticate(String username, String password) throws Exception {
