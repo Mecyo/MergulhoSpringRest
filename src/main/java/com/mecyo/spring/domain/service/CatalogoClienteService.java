@@ -5,6 +5,8 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.commons.mail.EmailException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +29,8 @@ import com.mecyo.spring.utils.PasswordGenerator;
 
 @Service
 public class CatalogoClienteService {
+	
+	protected final Log logger = LogFactory.getLog(getClass());
 	
 	@Value("${app.url.prod}")
 	private String urlApp;
@@ -70,6 +74,7 @@ public class CatalogoClienteService {
 			cliente.getGrupos().add(Grupo.builder().id(GrupoUsuario.USER_GROUP.getId()).build());
 			novo = repository.save(cliente);
 		} catch (Exception e) {
+			logger.error("Falha ao enviar o e-mail de senha para '" + email + "'", e);
 			throw new NegocioException("Falha ao enviar o e-mail de senha para '" + email + "'");
 		}
 		
