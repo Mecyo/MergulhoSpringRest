@@ -68,7 +68,7 @@ public class PlayerController {
 		return service.ban(playerInput);
 	}
 	
-	@PostMapping("/unban/{playerId}")
+	@GetMapping("/unban/{playerId}")
 	public ResponseEntity<Void> unban(@PathVariable Long playerId) {
 		return service.unban(playerId);
 	}
