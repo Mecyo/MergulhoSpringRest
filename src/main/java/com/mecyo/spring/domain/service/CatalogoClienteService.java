@@ -167,4 +167,19 @@ public class CatalogoClienteService {
 
 		return ResponseEntity.ok(clienteMapper.toDTO(cliente.get()));
 	}
+
+	public ResponseEntity<Void> addRoleAdmin(Long clienteId) {
+		Optional<Cliente> optCliente = repository.findById(clienteId);
+		if(!optCliente.isPresent()) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		Cliente cliente = optCliente.get();
+		if(!cliente.getGrupos().stream().anyMatch(g -> g.getId().equals(GrupoUsuario.ADMIN_GROUP.getId()))) {
+			cliente.getGrupos().add(Grupo.builder().id(GrupoUsuario.ADMIN_GROUP.getId()).build());
+			repository.save(cliente);
+		}
+		
+		return ResponseEntity.noContent().build();
+	}
 }

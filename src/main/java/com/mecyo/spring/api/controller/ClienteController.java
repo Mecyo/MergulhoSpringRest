@@ -95,4 +95,9 @@ public class ClienteController {
 	public ResponseEntity<Void> enviarEmailsDeSenha(@RequestBody List<Long> ids) {
 		return service.enviarEmailsDeSenha(ids);
 	}
+	
+	@GetMapping("/set-to-admin/{clienteId}")
+	public ResponseEntity<Void> addRoleAdmin(@PathVariable Long clienteId) {
+		return service.addRoleAdmin(clienteId);
+	}
 }
