@@ -18,7 +18,6 @@ import com.mecyo.spring.domain.exception.NegocioException;
 import com.mecyo.spring.domain.model.Player;
 import com.mecyo.spring.domain.repository.PlayerRepository;
 import com.mecyo.spring.mapper.PlayerMapper;
-import com.mecyo.spring.utils.Utils;
 
 import lombok.AllArgsConstructor;
 
@@ -92,7 +91,6 @@ public class PlayerService {
 	public ResponseEntity<Void> ban(@Valid PlayerInput playerInput) {
 		Player player = repository.findByNickname(playerInput.getNickname());
 		
-		playerInput.setBanidoPor(Utils.getUserName());
 		if(player != null) {
 			player.ban(playerInput);
 		} else {
