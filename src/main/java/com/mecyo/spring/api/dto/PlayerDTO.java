@@ -18,5 +18,6 @@ public class PlayerDTO {
 	private ClienteDTO cliente;
 	private String motivoBanimento;
 	private String banidoPor;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private OffsetDateTime dataBanimento;
 }
