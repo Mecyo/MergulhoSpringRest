@@ -103,4 +103,17 @@ public class PlayerService {
 		
 		return ResponseEntity.noContent().build();
 	}
+
+	public ResponseEntity<Void> unban(Long playerId) {
+		Optional<Player> optPlayer = repository.findById(playerId);
+		
+		if(!optPlayer.isPresent()) {
+			return ResponseEntity.notFound().build();
+		}
+		Player player = optPlayer.get();
+		player.unban();
+		repository.save(player);
+		
+		return ResponseEntity.noContent().build();
+	}
 }

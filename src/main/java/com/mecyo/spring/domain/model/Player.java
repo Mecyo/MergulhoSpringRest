@@ -80,4 +80,10 @@ public class Player {
 		this.banidoPor = playerInput.getBanidoPor();
 		this.dataBanimento = OffsetDateTime.now();
 	}
+	
+	public void unban() {
+		this.motivoBanimento = null;
+		this.banidoPor = null;
+		this.dataBanimento = null;
+	}
 }
