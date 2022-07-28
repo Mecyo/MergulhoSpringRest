@@ -3,6 +3,7 @@ package com.mecyo.spring.api.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import com.mecyo.spring.domain.service.RankingService;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
+@CrossOrigin
 @RestController
 @RequestMapping("/ranking")
 public class RankingController {
