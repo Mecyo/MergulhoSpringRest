@@ -75,8 +75,8 @@ public class RankingService {
 		return ResponseEntity.noContent().build();
 	}
 
-	public ResponseEntity<List<RankingDTO>> calcularRanking(MultipartFile file, Integer week) {
-		rankingCalculator.calculate(file, week).forEach(this::create);
+	public ResponseEntity<List<RankingDTO>> calcularRanking(MultipartFile[] files, Integer week) {
+		rankingCalculator.calculate(files, week).forEach(this::create);
         	
 		return ResponseEntity.ok(this.listar());
 	}

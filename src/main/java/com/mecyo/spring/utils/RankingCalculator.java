@@ -42,81 +42,83 @@ public class RankingCalculator {
 	@Autowired
 	private RankingRepository rankingRepository;
 
-	public List<Ranking> calculate(MultipartFile file, Integer week) {
+	public List<Ranking> calculate(MultipartFile[] files, Integer week) {
 		Region region = Region.US_EAST_1;
 		RekognitionClient rekClient = RekognitionClient.builder().region(region).credentialsProvider(
 				StaticCredentialsProvider.create(AwsBasicCredentials.create(awsAccessKeyId, awsSecretAccessKey)))
 				.build();
 
-		return calculateByImages(rekClient, file, week);
+		return calculateByImages(rekClient, files, week);
 	}
-
-	public List<Ranking> calculateByImages(RekognitionClient rekClient, MultipartFile sourceImage, Integer week) {
+	
+	public List<Ranking> calculateByImages(RekognitionClient rekClient, MultipartFile[] sourceImages, Integer week) {
 		List<Ranking> rankingList = new ArrayList<Ranking>();
 
 		try {
 
-			InputStream sourceStream = sourceImage.getInputStream();
-			SdkBytes sourceBytes = SdkBytes.fromInputStream(sourceStream);
-
-			// Create an Image object for the source image
-			Image souImage = Image.builder().bytes(sourceBytes).build();
-
-			DetectTextRequest textRequest = DetectTextRequest.builder().image(souImage).build();
-
-			DetectTextResponse textResponse = rekClient.detectText(textRequest);
-			List<TextDetection> textCollection = textResponse.textDetections();
-
-			System.out.println("Detected lines and words");
-			boolean guerra = false;
-			boolean btnX = false;
-			int position = 0;
-			String name = Strings.EMPTY;
-			Integer points = 0;
-			for (TextDetection text : textCollection) {
-				// NOME - POSICAO - VALOR || NOME - VALOR - POSICAO
-				System.out.println("detectedText: " + text.detectedText());
-				if (position < 9) {
-					if (text.detectedText().toUpperCase().contains("gueRRa".toUpperCase())) {
-						guerra = true;
-						continue;
-					}
-
-					if (text.detectedText().equalsIgnoreCase("x")) {
-						btnX = true;
-						continue;
-					}
-
-					if (guerra && btnX && Strings.isEmpty(name)) {
-						name = Utils.isInteger(text.detectedText()) ? Strings.EMPTY : text.detectedText();
-						continue;
-					}
-
-					if (guerra && btnX && Strings.isNotEmpty(name) && points.equals(ZERO)
-							&& text.detectedText().equals(ZERO.toString())) {
-						points = Utils.isInteger(text.detectedText()) ? Integer.valueOf(text.detectedText()) : ZERO;
-						continue;
-					}
-
-					if (guerra && btnX && Strings.isNotEmpty(name) && points < TREZENTOS) {
-						points = Utils.isInteger(text.detectedText()) ? Integer.valueOf(text.detectedText()) : ZERO;
-					}
-
-					if (Strings.isNotEmpty(name) && points > TREZENTOS) {
-						// TODO forçar cadastro no site para poder ser premiado
-						// if(repository.findByNickname(name) != null) {
-						Ranking newRanking = rankingRepository.findByNickname(name);
-						if (newRanking == null) {
-							newRanking = new Ranking(name);
+			for (MultipartFile sourceImage : sourceImages) {
+				InputStream sourceStream = sourceImage.getInputStream();
+				SdkBytes sourceBytes = SdkBytes.fromInputStream(sourceStream);
+	
+				// Create an Image object for the source image
+				Image souImage = Image.builder().bytes(sourceBytes).build();
+	
+				DetectTextRequest textRequest = DetectTextRequest.builder().image(souImage).build();
+	
+				DetectTextResponse textResponse = rekClient.detectText(textRequest);
+				List<TextDetection> textCollection = textResponse.textDetections();
+	
+				System.out.println("Detected lines and words");
+				boolean guerra = false;
+				boolean btnX = false;
+				int position = 0;
+				String name = Strings.EMPTY;
+				Integer points = 0;
+				for (TextDetection text : textCollection) {
+					// NOME - POSICAO - VALOR || NOME - VALOR - POSICAO
+					System.out.println("detectedText: " + text.detectedText());
+					if (position < 9) {
+						if (text.detectedText().toUpperCase().contains("gueRRa".toUpperCase())) {
+							guerra = true;
+							continue;
 						}
-
-						newRanking.setWeekPoints(week, points);
-
-						rankingList.add(newRanking);
-						position++;
-						name = Strings.EMPTY;
-						points = ZERO;
-						// TODO}
+	
+						if (text.detectedText().equalsIgnoreCase("x")) {
+							btnX = true;
+							continue;
+						}
+	
+						if (guerra && btnX && Strings.isEmpty(name)) {
+							name = Utils.isInteger(text.detectedText()) ? Strings.EMPTY : text.detectedText();
+							continue;
+						}
+	
+						if (guerra && btnX && Strings.isNotEmpty(name) && points.equals(ZERO)
+								&& text.detectedText().equals(ZERO.toString())) {
+							points = Utils.isInteger(text.detectedText()) ? Integer.valueOf(text.detectedText()) : ZERO;
+							continue;
+						}
+	
+						if (guerra && btnX && Strings.isNotEmpty(name) && points < TREZENTOS) {
+							points = Utils.isInteger(text.detectedText()) ? Integer.valueOf(text.detectedText()) : ZERO;
+						}
+	
+						if (Strings.isNotEmpty(name) && points > TREZENTOS) {
+							// TODO forçar cadastro no site para poder ser premiado
+							// if(repository.findByNickname(name) != null) {
+							Ranking newRanking = rankingRepository.findByNickname(name);
+							if (newRanking == null) {
+								newRanking = new Ranking(name);
+							}
+	
+							newRanking.setWeekPoints(week, points);
+	
+							rankingList.add(newRanking);
+							position++;
+							name = Strings.EMPTY;
+							points = ZERO;
+							// TODO}
+						}
 					}
 				}
 			}

@@ -29,8 +29,8 @@ public class RankingController {
 	}
 
 	@PostMapping("/calcular")
-	public ResponseEntity<List<RankingDTO>> calcularRanking(@RequestParam("file") MultipartFile file, @RequestParam Integer week) {
-		return service.calcularRanking(file, week);
+	public ResponseEntity<List<RankingDTO>> calcularRanking(@RequestParam("files") MultipartFile[] files, @RequestParam Integer week) {
+		return service.calcularRanking(files, week);
 	}
 	
 	@GetMapping("/resetar")
