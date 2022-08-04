@@ -33,6 +33,11 @@ public class RankingController {
 		return service.calcularRanking(files, week);
 	}
 	
+	@PostMapping("/calcular-csv")
+	public ResponseEntity<List<RankingDTO>> calcularRankingCsv(@RequestParam("file") MultipartFile file) {
+		return service.calcularRankingCsv(file);
+	}
+	
 	@GetMapping("/resetar")
 	public ResponseEntity<Void> resetar() {
 		service.resetar();

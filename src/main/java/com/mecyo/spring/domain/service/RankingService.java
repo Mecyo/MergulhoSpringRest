@@ -84,4 +84,10 @@ public class RankingService {
 	public void resetar() {
 		repository.deleteAll();
 	}
+
+	public ResponseEntity<List<RankingDTO>> calcularRankingCsv(MultipartFile file) {
+		rankingCalculator.calculateCsv(file).forEach(this::create);
+    	
+		return ResponseEntity.ok(this.listar());
+	}
 }

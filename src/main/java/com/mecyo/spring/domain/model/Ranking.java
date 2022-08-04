@@ -37,6 +37,7 @@ public class Ranking {
     private Integer secondWeek = 0;
     private Integer thirdWeek = 0;
     private Integer fourthWeek = 0;
+    private Integer decksUseds = 0;
     @Transient
     private Integer totalPoints = 0;
 	
