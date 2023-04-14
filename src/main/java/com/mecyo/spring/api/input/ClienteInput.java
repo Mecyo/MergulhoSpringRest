@@ -21,4 +21,6 @@ public class ClienteInput {
 	@Valid
 	@NotBlank
 	private String telefone;
+
+	private String pass;
 }

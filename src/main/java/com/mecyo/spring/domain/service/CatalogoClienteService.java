@@ -24,6 +24,7 @@ import com.mecyo.spring.domain.model.Cliente;
 import com.mecyo.spring.domain.model.Grupo;
 import com.mecyo.spring.domain.repository.ClienteRepository;
 import com.mecyo.spring.mapper.ClienteMapper;
+import com.mecyo.spring.utils.AESCrypt;
 import com.mecyo.spring.utils.CommonsMail;
 import com.mecyo.spring.utils.PasswordGenerator;
 
@@ -168,18 +169,42 @@ public class CatalogoClienteService {
 		return ResponseEntity.ok(clienteMapper.toDTO(cliente.get()));
 	}
 
-	public ResponseEntity<Void> addRoleAdmin(Long clienteId) {
+	private Cliente findClienteById(Long clienteId) {
 		Optional<Cliente> optCliente = repository.findById(clienteId);
 		if(!optCliente.isPresent()) {
+			return null;
+		}
+		
+		return optCliente.get();
+	}
+
+	public ResponseEntity<Void> addRoleAdmin(Long clienteId) {
+		Cliente cliente = findClienteById(clienteId);
+		
+		if(cliente == null) {
 			return ResponseEntity.notFound().build();
 		}
 		
-		Cliente cliente = optCliente.get();
 		if(!cliente.getGrupos().stream().anyMatch(g -> g.getId().equals(GrupoUsuario.ADMIN_GROUP.getId()))) {
 			cliente.getGrupos().add(Grupo.builder().id(GrupoUsuario.ADMIN_GROUP.getId()).build());
 			repository.save(cliente);
 		}
 		
+		return ResponseEntity.noContent().build();
+	}
+
+	public ResponseEntity<Void> changePassword(Long clienteId, String newPass) {
+		Cliente cliente = findClienteById(clienteId);
+		
+		if(cliente == null) {
+			return ResponseEntity.notFound().build();
+		}
+
+		String senha = AESCrypt.decrypt(newPass, "insanosKey");
+		cliente.setSenha(new BCryptPasswordEncoder().encode(senha));
+
+		repository.save(cliente);
+
 		return ResponseEntity.noContent().build();
 	}
 }

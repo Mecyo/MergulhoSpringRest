@@ -100,4 +100,9 @@ public class ClienteController {
 	public ResponseEntity<Void> addRoleAdmin(@PathVariable Long clienteId) {
 		return service.addRoleAdmin(clienteId);
 	}
+
+	@PostMapping("/change-password")
+	public ResponseEntity<Void> changePassword(@RequestBody ClienteInput clienteInput) {
+		return service.changePassword(clienteInput.getId(), clienteInput.getPass());
+	}
 }
