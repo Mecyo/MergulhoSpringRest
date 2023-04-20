@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mecyo.spring.api.dto.PartidaDTO;
 import com.mecyo.spring.api.dto.TorneioDTO;
 import com.mecyo.spring.api.input.TorneioInput;
 import com.mecyo.spring.domain.model.Torneio;
 import com.mecyo.spring.domain.service.TorneioService;
+import com.mecyo.spring.mapper.PartidaMapper;
 import com.mecyo.spring.mapper.TorneioMapper;
 
 import lombok.AllArgsConstructor;
@@ -32,6 +34,7 @@ public class TorneioController {
 	
 	private TorneioService service;
 	private TorneioMapper torneioMapper;
+	private PartidaMapper partidaMapper;
 
 	@GetMapping
 	public List<TorneioDTO> listar() {
@@ -76,5 +79,30 @@ public class TorneioController {
 		service.delete(torneioId);
 		
 		return ResponseEntity.noContent().build();
+	}
+
+	@GetMapping("/iniciarTorneio")
+	public TorneioDTO iniciarTorneio() {
+		return service.iniciarTorneio();
+	}
+
+	@GetMapping("/getOitavasDeFinal")
+	public List<PartidaDTO> getOitavasDeFinal() {
+		return service.oitavasDeFinal().getOitavasDeFinal();
+	}
+
+	@GetMapping("/getQuartasDeFinal")
+	public List<PartidaDTO> getQuartasDeFinal() {
+		return service.quartasDeFinal().getQuartasDeFinal();
+	}
+
+	@GetMapping("/getSemiFinal")
+	public List<PartidaDTO> getSemiFinal() {
+		return service.semiFinal().getSemiFinal();
+	}
+
+	@GetMapping("/getPartidaFinal")
+	public PartidaDTO getFinal() {
+		return service.getFinal();
 	}
 }

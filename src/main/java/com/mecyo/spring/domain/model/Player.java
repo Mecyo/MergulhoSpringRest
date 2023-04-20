@@ -75,6 +75,12 @@ public class Player {
 		this.dataBanimento = this.dataRegistro = OffsetDateTime.now();
 	}
 
+	public Player(Long id, String nickname) {
+		this.id = id;
+		this.nickname = nickname;
+	}
+
+
 	public void ban(@Valid PlayerInput playerInput) {
 		this.motivoBanimento = playerInput.getMotivoBanimento();
 		this.banidoPor = playerInput.getBanidoPor();

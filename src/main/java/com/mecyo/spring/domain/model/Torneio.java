@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -39,6 +40,19 @@ public class Torneio {
 	
 	@JsonProperty(access = Access.READ_ONLY)
 	private OffsetDateTime dataRegistro;
+
+	@Transient
+	private List<Partida> left = new ArrayList<>();
+	@Transient
+	private List<Partida> right = new ArrayList<>();
+	@Transient
+	private List<Partida> oitavasDeFinal = new ArrayList<>();
+	@Transient
+	private List<Partida> quartasDeFinal = new ArrayList<>();
+	@Transient
+	private List<Partida> semiFinal = new ArrayList<>();
+	@Transient
+	private Partida partidaFinal;
 	
 	@ManyToMany
 	private List<Player> players = new ArrayList<>();

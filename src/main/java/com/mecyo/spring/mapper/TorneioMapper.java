@@ -30,6 +30,10 @@ public class TorneioMapper {
 		return modelMapper.map(torneioInput, Torneio.class);
 	}
 
+	public Torneio toEntity(TorneioDTO torneioInput) {
+		return modelMapper.map(torneioInput, Torneio.class);
+	}
+
 	public List<Torneio> toCollectionEntity(List<TorneioInput> torneios) {
 		return torneios.stream().map(this::toEntity).collect(Collectors.toList());
 	}

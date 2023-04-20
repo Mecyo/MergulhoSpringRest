@@ -25,4 +25,8 @@ public interface ValidationGroups {
 	public interface RankingId {
 
 	}
+
+	public interface PartidaId {
+
+	}
 }
