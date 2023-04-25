@@ -9,12 +9,15 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.mecyo.spring</groupId>
-	<artifactId>curso-spring-rest</artifactId>
+	<artifactId>insanos-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>curso-spring-rest</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>11</java.version>
+		<endpoints.framework.version>2.2.2</endpoints.framework.version>
+    	<endpoints.management.version>1.0.14</endpoints.management.version>
+		<endpoints.project.id>clash-insanos</endpoints.project.id>
 	</properties>
 	<dependencyManagement>
 	  <dependencies>
