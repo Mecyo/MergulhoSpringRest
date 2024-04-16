@@ -29,7 +29,7 @@ Api para atender ao site insanos de clash royale.
 - Consultas com Spring Data JPA
 - Injeção de Dependências
 - ~~Tratamento de respostas de erro~~
-- <s>Geração automática do Swagger com a OpenAPI 3<s>
+- ~~Geração automática do Swagger com a OpenAPI 3~~
 
 ## Como Executar
 
@@ -45,7 +45,7 @@ $ java -jar target/insanos-api-0.0.1-SNAPSHOT.jar
 ```
 
 A API poderá ser acessada em [localhost:8080](http://localhost:8080).
-<s>O Swagger poderá ser visualizado em [localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)<s>
+~~O Swagger poderá ser visualizado em [localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)~~
 
 ## API Endpoints
 
