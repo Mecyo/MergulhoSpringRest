@@ -4,7 +4,7 @@
 
 <p align="center">
  <img src="https://img.shields.io/static/v1?label=Youtube&message=@mecyo&color=#0092df&labelColor=000000" alt="@mecyo" />
- <img src="https://img.shields.io/static/v1?label=Tipo&message=Template&color=#0092df&labelColor=000000" alt="Template" />
+ <img src="https://img.shields.io/static/v1?label=Tipo&message=API Rest&color=#0092df&labelColor=000000" alt="API Rest" />
 </p>
 
 Api para atender ao site insanos de clash royale.
